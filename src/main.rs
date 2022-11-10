@@ -22,7 +22,7 @@ struct SelectedText<'a> {
 }
 
 impl<'a> SelectedText<'a> {
-    fn new(string: &'a String, start: usize, end: usize) -> Self {
+    fn new(string: &'a str, start: usize, end: usize) -> Self {
         SelectedText {
             start,
             end,
@@ -30,12 +30,7 @@ impl<'a> SelectedText<'a> {
         }
     }
 
-    fn split_start_end(
-        &self,
-        filter_fns: &FilterFlags,
-        delim: &str,
-        pat: &Vec<&String>,
-    ) -> Vec<&str> {
+    fn split_start_end(&self, filter_fns: &FilterFlags, delim: &str, pat: &[&String]) -> Vec<&str> {
         use FilterFlags::*;
         self.select_text
             .split(delim)
@@ -127,11 +122,11 @@ impl StartEnd for String {
                 len: self.len(),
             }
         } else {
-            return StartEndLen {
+            StartEndLen {
                 start: 0,
                 end: 0,
                 len: 0,
-            };
+            }
         }
     }
 }
@@ -299,7 +294,7 @@ fn main() -> io::Result<()> {
         println!(
             "{}{}{}",
             &stdin_line[0..start_end_len.start],
-            &vec.join(&delim).color(set_color(color_value)),
+            &vec.join(delim).color(set_color(color_value)),
             &stdin_line[start_end_len.end..start_end_len.len]
         );
     }
@@ -410,4 +405,3 @@ fn range_arg(app_cmmd: &ArgMatches) -> Vec<String> {
         .map(|var| var.to_string())
         .collect::<Vec<_>>()
 }
-
